@@ -13,7 +13,9 @@
 
 package com.shop.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -23,7 +25,9 @@ import java.util.Date;
 
 @Entity
 @Table(name="product")
-@Data
+@Getter
+@Setter
+@ToString
 public class Product{
 
     @Id
@@ -60,8 +64,8 @@ public class Product{
     @CreationTimestamp
     private Date dateCreated;
 
-    @Column(name = "lat)updated")
+    @Column(name = "last_updated")
     @UpdateTimestamp
-    private Date latUpdated;
+    private Date lastUpdated;
 
 }
