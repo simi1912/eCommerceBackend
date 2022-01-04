@@ -14,8 +14,10 @@
 package com.shop.config;
 
 
+import com.shop.entity.Country;
 import com.shop.entity.Product;
 import com.shop.entity.ProductCategory;
+import com.shop.entity.State;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
@@ -42,15 +44,10 @@ public class MyDataRestConfig implements RepositoryRestConfigurer{
         HttpMethod[] unsupportedMethods = {HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE};
 
 //        disable HTTP methods
-        config.getExposureConfiguration()
-                .forDomainType(Product.class)
-                .withItemExposure((metadata, httpMethods) -> httpMethods.disable(unsupportedMethods))
-                .withCollectionExposure((metadata, httpMethods) -> httpMethods.disable(unsupportedMethods));
-
-        config.getExposureConfiguration()
-                .forDomainType(ProductCategory.class)
-                .withItemExposure((metadata, httpMethods) -> httpMethods.disable(unsupportedMethods))
-                .withCollectionExposure((metadata, httpMethods) -> httpMethods.disable(unsupportedMethods));
+        disableHttpMethods(Product.class, config, unsupportedMethods);
+        disableHttpMethods(ProductCategory.class, config, unsupportedMethods);
+        disableHttpMethods(Country.class, config, unsupportedMethods);
+        disableHttpMethods(State.class, config, unsupportedMethods);
 
         //expose ids
         Set<EntityType<?>> entities = entityManager.getMetamodel().getEntities();
@@ -59,6 +56,13 @@ public class MyDataRestConfig implements RepositoryRestConfigurer{
             entityClasses.add(entityType.getJavaType());
         Class[] domainTypes = entityClasses.toArray(new Class[0]);
         config.exposeIdsFor(domainTypes);
+    }
+
+    private void disableHttpMethods(Class domainType, RepositoryRestConfiguration config, HttpMethod[] unsupportedMethods) {
+        config.getExposureConfiguration()
+                .forDomainType(domainType)
+                .withItemExposure( (metadata, httpMethods) -> httpMethods.disable(unsupportedMethods))
+                .withCollectionExposure( (metadata, httpMethods) -> httpMethods.disable(unsupportedMethods));
     }
 
 }
